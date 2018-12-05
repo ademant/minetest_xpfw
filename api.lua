@@ -7,6 +7,7 @@ local check_value=function(tab,val,def)
 if tab[val] == nil then
 	tab[val] = def
 end
+end
 
 M.register_experience=function(name,indata)
 	local tid=table.copy(indata)
@@ -30,4 +31,5 @@ minetest.register_on_joinplayer(function(player)
 		M.player[playername].killed_player=0 --count of killed players
 	end
 	M.player[playername].lastlogin=os.clock() -- last login time
-end)
+end
+)

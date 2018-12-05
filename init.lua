@@ -8,6 +8,6 @@ minetest.log("action", "[MOD]"..minetest.get_current_modname().." -- start loadi
 -- Load files
 
 
-dofile(farming.path .. "/api.lua") -- API
+dofile(xpfw.path .. "/api.lua") -- API
 
 minetest.log("action", "[MOD]"..minetest.get_current_modname().." -- loaded ")
