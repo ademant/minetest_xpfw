@@ -95,3 +95,31 @@ minetest.register_on_shutdown(function()
 	xpfw.mod_storage:from_table(M)
 end
 )
+
+minetest.register_globalstep(function(dtime)
+	local players = minetest.get_connected_players()
+	for i=1, #players do
+		local player=players[i]
+		local name = player:get_player_name()
+		if M.player[name] ~= nil then
+			local playerdata=M.player[name]
+			if playerdata.last_pos ~= nil then
+				local act_pos=player:get_pos()
+				local tdist=vector.distance(act_pos,playerdata.last_pos)
+				if tdist > 0 then
+					playerdata.distance=playerdata.distance+tdist
+					playerdata.last_pos = act_pos
+				end
+			else
+				playerdata.last_pos = player:get_pos()
+			end
+			local tvel=player:get_player_velocity()
+			if tvel ~= nil then
+				local tvelo=vector.distance(tvel,{x=0,y=0,z=0})
+				if tvelo>0 then
+					playerdata.walked=playerdata.walked+tvelo*dtime
+				end
+			end
+		end
+	end
+end)
