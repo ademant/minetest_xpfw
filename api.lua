@@ -13,7 +13,7 @@ if tab[val] == nil then
 end
 end
 
-local player_add_attribute=function(player,attrib,val)
+xpfw.player_add_attribute=function(player,attrib,val)
 	local pm=player:get_meta()
 	local old_val=pm:get_float(attrib) or 0
 	pm:set_float(attrib,old_val+val)

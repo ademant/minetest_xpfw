@@ -7,3 +7,4 @@ for i,configs in ipairs({"decay"}) do
 		end
 	end
 end
+

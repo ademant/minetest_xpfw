@@ -12,5 +12,6 @@ minetest.log("action", "[MOD]"..minetest.get_current_modname().." -- start loadi
 
 
 dofile(xpfw.path .. "/api.lua") -- API
+dofile(xpfw.path .. "/config.lua") -- API
 
 minetest.log("action", "[MOD]"..minetest.get_current_modname().." -- loaded ")
