@@ -1,0 +1,1 @@
+xpfw.prefix (Prefix for variable name) string "xp"

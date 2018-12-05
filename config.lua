@@ -8,3 +8,4 @@ for i,configs in ipairs({"decay"}) do
 	end
 end
 
+xpfw.prefix=minetest.settings:get("xpfw.prefix") or "xp"
