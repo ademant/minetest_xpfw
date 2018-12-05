@@ -13,6 +13,14 @@ if tab[val] == nil then
 end
 end
 
+local player_add_attribute=function(player,attrib,val)
+	local pm=player:get_meta()
+	local old_val=pm:get_float(attrib) or 0
+	pm:set_float(attrib,old_val+val)
+	print(attrib,val)
+	print(pm:get_float(attrib))
+end
+
 M.register_experience=function(name,indata)
 	local tid=table.copy(indata)
 	tid.name=name
@@ -24,77 +32,61 @@ end
 minetest.register_on_joinplayer(function(player)
 	local playername = player:get_player_name()
 
-	if M.player[playername]==nil then
-		M.player[playername]={walked=0, -- really walked distances
-			distance=0, -- including teleport etc.
-			logon=0, -- logon time
-			logstat={}, -- detailed logons (if configured)
-			dug=0, -- count of nodes dugged
-			build=0, -- count of build nodes
-			deaths=0, -- count of deaths
-			spoke=0, -- count of chat messages
-			killed_mobs=0, -- count of killed mobs
-			killed_player=0, --count of killed players
-			last_pos=player:get_pos(), --actual position
-			}
+	for i,colu in ipairs({"walked","distance","login","dug","build","deaths","spoke","killed_mobs","killed_player",
+		"lastlogin"}) do
+		if player:get_attribute("xp_"..colu) == nil then
+			player:set_attribute("xp_"..colu,0)
+		end
 	end
-	M.player[playername].lastlogin=os.time() -- last login time
+	if M.player[playername]==nil then
+		M.player[playername]={last_pos=player:get_pos(),} --actual position
+	end
+	local pm=player:get_meta()
+	pm:set_int("xp_lastlogin",os.time()) -- last login time
 end
 )
 
 minetest.register_on_placenode(function(pos, newnode, player, oldnode, itemstack, pointed_thing)
 	if player ~= nil then
 		local playername = player:get_player_name()
-		local playerdata=M.player[playername]
-		if playerdata ~= nil then
-			playerdata.build=playerdata.build+1
-		end
+		player_add_attribute(player,"xp_build",1)
 	end
 end)
 
 minetest.register_on_dieplayer(function(player, reason)
 	print(dump2(reason))
 	if player ~= nil then
-		local playername = player:get_player_name()
-		local playerdata=M.player[playername]
-		if playerdata ~= nil then
-			playerdata.death=playerdata.death+1
-		end
+		player_add_attribute(player,"xp_deaths",1)
 	end
 end)
+
 minetest.register_on_chat_message(function(player, reason)
-	print(dump2(reason))
 	if player ~= nil then
---		local playername = player:get_player_name()
-		local playerdata=M.player[player]
-		if playerdata ~= nil then
-			playerdata.spoke=playerdata.spoke+1
-		end
+		player_add_attribute(player,"xp_spoke",1)
 	end
 end)
 
 minetest.register_on_dignode(function(pos,oldnoe,player)
-	local playername = player:get_player_name()
-	local playerdata=M.player[playername]
-	if playerdata ~= nil then
-		playerdata.dug=playerdata.dug+1
+	if player ~= nil then
+		player_add_attribute(player,"xp_dug",1)
 	end
 end)
 
-minetest.register_on_joinplayer(function(player)
-	local playername = player:get_player_name()
-	local playerdata=M.player[playername]
-	if playerdata ~= nil then
+minetest.register_on_leaveplayer(function(player)
+	if player ~= nil then
 		local leave=os.time()
-		playerdata.logon=playerdata.logon+(leave-playerdata.lastlogin)
+		player_add_attribute(player,"xp_logon",player:get_attribute("xp_lastlogin")-leave)
 	end
+	print(dump2(player:get_meta()))
 end)
 
+--[[
 minetest.register_on_shutdown(function()
 	print(dump2(M))
-	xpfw.mod_storage:from_table(M)
+--	xpfw.mod_storage:from_table(M)
 end
 )
+]]
 
 minetest.register_globalstep(function(dtime)
 	local players = minetest.get_connected_players()
@@ -107,7 +99,7 @@ minetest.register_globalstep(function(dtime)
 				local act_pos=player:get_pos()
 				local tdist=vector.distance(act_pos,playerdata.last_pos)
 				if tdist > 0 then
-					playerdata.distance=playerdata.distance+tdist
+					player_add_attribute(player,"xp_distance",tdist)
 					playerdata.last_pos = act_pos
 				end
 			else
@@ -117,7 +109,7 @@ minetest.register_globalstep(function(dtime)
 			if tvel ~= nil then
 				local tvelo=vector.distance(tvel,{x=0,y=0,z=0})
 				if tvelo>0 then
-					playerdata.walked=playerdata.walked+tvelo*dtime
+					player_add_attribute(player,"xp_walked",tvelo*dtime)
 				end
 			end
 		end
