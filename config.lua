@@ -9,3 +9,8 @@ for i,configs in ipairs({"decay"}) do
 end
 
 xpfw.prefix=minetest.settings:get("xpfw.prefix") or "xp"
+
+for i,attr in ipairs({"walked","distance","login","dug","build","deaths","spoke","killed_mobs","killed_player",
+		"lastlogin"}) do
+	xpfw.register_attribute(attr,{min=0,max=math.huge})
+end
