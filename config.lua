@@ -9,8 +9,13 @@ for i,configs in ipairs({"decay"}) do
 end
 
 xpfw.prefix=minetest.settings:get("xpfw.prefix") or "xp"
+xpfw.mean_weight=minetest.settings:get(xpfw.mean_weight) or 500
+xpfw.experience_max=minetest.settings:get(xpfw.experience_max) or 20
 
 for i,attr in ipairs({"walked","distance","login","dug","build","deaths","spoke","killed_mobs","killed_player",
-		"lastlogin"}) do
+		"lastlogin","logon"}) do
 	xpfw.register_attribute(attr,{min=0,max=math.huge})
 end
+xpfw.register_attribute("meanlight",{min=0,max=default.LIGHT_MAX,
+	moving_average_factor=minetest.settings:get("xpfw.light_mean_weight") or 500
+	})
