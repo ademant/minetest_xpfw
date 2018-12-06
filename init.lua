@@ -1,7 +1,6 @@
 
 xpfw = {}
 xpfw.path = minetest.get_modpath("xpfw")
-xpfw.config = minetest.get_mod_storage()
 xpfw.modname=minetest.get_current_modname()
 xpfw.mod_storage=minetest.get_mod_storage()
 xpfw.store_table={}--xpfw.mod_storage:to_table()
@@ -14,5 +13,6 @@ minetest.log("action", "[MOD]"..minetest.get_current_modname().." -- start loadi
 
 dofile(xpfw.path .. "/api.lua") -- API
 dofile(xpfw.path .. "/config.lua") -- API
+dofile(xpfw.path .. "/chat_commands.lua")
 
 minetest.log("action", "[MOD]"..minetest.get_current_modname().." -- loaded ")

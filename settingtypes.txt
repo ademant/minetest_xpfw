@@ -1,4 +1,4 @@
 xpfw.prefix (Prefix for variable name) string "xp"
-xpfw.light_mean_weight (Weight factor for light value)  int 500 1 10000
-xpfw.mean_weight (Weight factor for calculating mean value)  int 500 1 10000
+xpfw.light_mean_weight (Weight factor for light value)  int 5000 1 10000
+xpfw.mean_weight (Weight factor for calculating mean value)  int 5000 1 10000
 xpfw.experience_max (Normal max value for experiences) int 20 10 100

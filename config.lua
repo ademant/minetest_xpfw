@@ -9,8 +9,8 @@ for i,configs in ipairs({"decay"}) do
 end
 
 xpfw.prefix=minetest.settings:get("xpfw.prefix") or "xp"
-xpfw.mean_weight=minetest.settings:get(xpfw.mean_weight) or 500
-xpfw.experience_max=minetest.settings:get(xpfw.experience_max) or 20
+xpfw.mean_weight=minetest.settings:get("xpfw.mean_weight") or 500
+xpfw.experience_max=minetest.settings:get("xpfw.experience_max") or 20
 
 for i,attr in ipairs({"walked","distance","login","dug","build","deaths","spoke","killed_mobs","killed_player",
 		"lastlogin","logon"}) do
