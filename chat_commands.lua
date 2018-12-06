@@ -20,6 +20,17 @@ minetest.register_chatcommand("xpset", {
 	end
 })
 
+minetest.register_chatcommand("xpreset", {
+	privs = {
+		xpfwset = true
+	},
+	description = "Reset the statistics/experience for yourself",
+	func = function(name, param)
+		xpfw.player_reset_attribute(player)
+		minetest.chat_send_player(name, "All Attributs resetted")
+	end
+})
+
 minetest.register_chatcommand("xpfw", {
 	privs = {
 		server = true

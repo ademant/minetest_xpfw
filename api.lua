@@ -67,12 +67,26 @@ M.register_experience=function(name,indata)
 	M.experiences[name]=tid
 end
 
+xpfw.player_reset_attributes(player)
+	for i,att_def in ipairs(xpfw.attributes) do
+		local setval=att_def.min or 0
+		if att_def.default ~= nil then
+			setval=att_def.default
+		end
+		player:set_attribute(xpfw.prefix.."_"..att_def.name,setval)
+	end
+end
+
 minetest.register_on_joinplayer(function(player)
 	local playername = player:get_player_name()
 
 	for i,att_def in ipairs(xpfw.attributes) do
 		if player:get_attribute(xpfw.prefix.."_"..att_def.name) == nil then
-			player:set_attribute(xpfw.prefix.."_"..att_def.name,att_def.min or 0)
+			local defval=att_def.min or 0
+			if att_def.default ~= nil then
+				defval=att_def.default
+			end
+			player:set_attribute(xpfw.prefix.."_"..att_def.name,defval)
 		end
 	end
 	if M.player[playername]==nil then
