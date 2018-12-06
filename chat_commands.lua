@@ -1,3 +1,25 @@
+minetest.register_privilege("xpfwset", {description="Set experience level"})
+
+minetest.register_chatcommand("xpset", {
+	privs = {
+		xpfwset = true
+	},
+	params = "<name>",
+	description = "Set the statistics/experience for yourself",
+	func = function(name, param)
+		print(name,param)
+		local xp= string.split(param, " ")
+		print(dump2(xp))
+		player=minetest.get_player_by_name(name)
+		if xpfw.player_get_attribute(player,xp[1]) ~= nil then
+			xpfw.player_set_attribute(player,xp[1],xp[2])
+			minetest.chat_send_player(name, "Attribut "..xp[1].." set to "..xp[2])
+		else
+			minetest.chat_send_player(name, "Attribut "..xp[1].." not fount")
+		end
+	end
+})
+
 minetest.register_chatcommand("xpfw", {
 	privs = {
 		server = true
