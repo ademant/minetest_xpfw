@@ -19,6 +19,7 @@ xpfw.register_attribute=function(name,data)
 	data.name=name
 	xpfw.attributes[name]=data
 end
+
 xpfw.player_add_attribute=function(player,attrib,val)
 	local oldvalue=xpfw.player_get_attribute(player,attrib)
 	local att_def=xpfw.attributes[attrib]
@@ -113,8 +114,9 @@ minetest.register_on_dieplayer(function(player, reason)
 end)
 
 minetest.register_on_chat_message(function(player, reason)
+	print(dump2(player))
 	if player ~= nil then
-		xpfw.player_add_attribute(player,"spoke",1)
+		xpfw.player_add_attribute(minetest.get_player_by_name(player),"spoke",1)
 	end
 end)
 
