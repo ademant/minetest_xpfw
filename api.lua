@@ -67,7 +67,7 @@ M.register_experience=function(name,indata)
 	M.experiences[name]=tid
 end
 
-xpfw.player_reset_attributes(player)
+xpfw.player_reset_attributes=function(player)
 	for i,att_def in ipairs(xpfw.attributes) do
 		local setval=att_def.min or 0
 		if att_def.default ~= nil then
@@ -167,9 +167,14 @@ minetest.register_globalstep(function(dtime)
 			-- calculation walk by actual velocity
 			local tvel=player:get_player_velocity()
 			if tvel ~= nil then
+				local act_node=minetest.get_node(act_pos)
+				local vel_action="walked"
+				if minetest.get_item_group(act_node.name,"water")>0 then
+					vel_action="swam"
+				end
 				local tvelo=vector.distance(tvel,{x=0,y=0,z=0})
 				if tvelo>0 then
-					xpfw.player_add_attribute(player,"walked",tvelo*dtime)
+					xpfw.player_add_attribute(player,vel_action,tvelo*dtime)
 				end
 			end
 			--calculating mean sun level
