@@ -91,10 +91,22 @@ minetest.register_on_joinplayer(function(player)
 		end
 	end
 	if M.player[playername]==nil then
-		M.player[playername]={last_pos=player:get_pos(),} --actual position
+		M.player[playername]={last_pos=player:get_pos(), --actual position
+			hud=1, --hud on
+			} 
 	end
+	local playerdata=M.player[playername]
 	local pm=player:get_meta()
 	pm:set_int(xpfw.prefix.."_lastlogin",os.time()) -- last login time
+	xpfw.player_add_attribute(player,"login",1)
+	playerdata.hidx=player:hud_add({
+		hud_elem_type = "text",
+		position = {x=1,y=1},
+		size = "",
+		text = "",
+		alignment = {x=-1,y=-1},
+	})
+	playerdata.dtime=0
 --	print(pm:get_int(xpfw.prefix.."_lastlogin"))
 end
 )
@@ -131,7 +143,6 @@ minetest.register_on_leaveplayer(function(player)
 		local leave=os.time()
 		xpfw.player_add_attribute(player,"logon",xpfw.player_get_attribute(player,"lastlogin")-leave)
 	end
-	print(dump2(player:get_meta()))
 end)
 
 minetest.register_on_shutdown(function()
@@ -141,10 +152,7 @@ minetest.register_on_shutdown(function()
 	for i=1, #players do
 		local player=players[i]
 		xpfw.player_add_attribute(player,"logon",xpfw.player_get_attribute(player,"lastlogin")-leave)
-		print(dump2(player))
-		print(player:get_player_name())
 	end
---	xpfw.mod_storage:from_table(M)
 end
 )
 
@@ -155,6 +163,8 @@ minetest.register_globalstep(function(dtime)
 		local name = player:get_player_name()
 		if M.player[name] ~= nil then
 			local playerdata=M.player[name]
+--			print(dump2(playerdata))
+			playerdata.dtime=playerdata.dtime+dtime
 			local act_pos=player:get_pos()
 			-- calculating distance to last known position
 			if playerdata.last_pos ~= nil then
@@ -170,11 +180,17 @@ minetest.register_globalstep(function(dtime)
 			local tvel=player:get_player_velocity()
 			if tvel ~= nil then
 				local act_node=minetest.get_node(act_pos)
+				-- check if swimming
 				local vel_action="walked"
 				if minetest.get_item_group(act_node.name,"water")>0 then
 					vel_action="swam"
 				end
 				local tvelo=vector.distance(tvel,{x=0,y=0,z=0})
+--				print(vel_action,tvelo)
+				local mean_speed="mean_"..vel_action.."_speed"
+				if xpfw.attributes[mean_speed].max ~= nil then
+					xpfw.player_add_attribute(player,mean_speed,xpfw.attributes[mean_speed].max)
+				end
 				if tvelo>0 then
 					xpfw.player_add_attribute(player,vel_action,tvelo*dtime)
 				end
@@ -184,6 +200,30 @@ minetest.register_globalstep(function(dtime)
 			if light_level ~= nil then
 				xpfw.player_add_attribute(player,"meanlight",light_level)
 			end
+			
+			if playerdata.hidx ~= nil then
+				
+				local act_logon=os.clock()-xpfw.player_get_attribute(player,"lastlogin")
+				local act_print=""
+				for i,att_def in ipairs(xpfw.attributes) do
+					print(dump2(att_def))
+					if att_def.hud ~= nil and att_def.name ~= "logon" then
+						act_print=act_print..attr..": "..math.ceil(xpfw.player_get_attribute(player,att_def.name)).."\n"
+					end
+				end
+				act_print=act_print.."logon: "..math.ceil(xpfw.player_get_attribute(player,"lastlogin")+act_logon)
+				player:hud_change(playerdata.hidx,"text",act_print)
+			end
+			
+			if playerdata.dtime>5 then
+				playerdata.dtime=0
+				for i,att_def in ipairs(xpfw.attributes) do
+					if att_def.moving_average_factor ~= nil then
+						xpfw.player_add_attribute(player,att_def.name,0)
+					end
+				end
+			end
 		end
+		
 	end
 end)
