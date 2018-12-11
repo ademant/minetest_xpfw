@@ -80,8 +80,7 @@ end
 
 minetest.register_on_joinplayer(function(player)
 	local playername = player:get_player_name()
-
-	for i,att_def in ipairs(xpfw.attributes) do
+	for i,att_def in pairs(xpfw.attributes) do
 		if player:get_attribute(xpfw.prefix.."_"..att_def.name) == nil then
 			local defval=att_def.min or 0
 			if att_def.default ~= nil then
@@ -186,13 +185,14 @@ minetest.register_globalstep(function(dtime)
 					vel_action="swam"
 				end
 				local tvelo=vector.distance(tvel,{x=0,y=0,z=0})
---				print(vel_action,tvelo)
-				local mean_speed="mean_"..vel_action.."_speed"
-				if xpfw.attributes[mean_speed].max ~= nil then
-					xpfw.player_add_attribute(player,mean_speed,xpfw.attributes[mean_speed].max)
-				end
 				if tvelo>0 then
 					xpfw.player_add_attribute(player,vel_action,tvelo*dtime)
+					
+					-- add experience
+					local mean_speed="mean_"..vel_action.."_speed"
+					if xpfw.attributes[mean_speed].max ~= nil then
+						xpfw.player_add_attribute(player,mean_speed,xpfw.attributes[mean_speed].max)
+					end
 				end
 			end
 			--calculating mean sun level
@@ -202,13 +202,11 @@ minetest.register_globalstep(function(dtime)
 			end
 			
 			if playerdata.hidx ~= nil then
-				
 				local act_logon=os.clock()-xpfw.player_get_attribute(player,"lastlogin")
 				local act_print=""
-				for i,att_def in ipairs(xpfw.attributes) do
-					print(dump2(att_def))
+				for i,att_def in pairs(xpfw.attributes) do
 					if att_def.hud ~= nil and att_def.name ~= "logon" then
-						act_print=act_print..attr..": "..math.ceil(xpfw.player_get_attribute(player,att_def.name)).."\n"
+						act_print=act_print..i..": "..math.ceil(xpfw.player_get_attribute(player,att_def.name)).."\n"
 					end
 				end
 				act_print=act_print.."logon: "..math.ceil(xpfw.player_get_attribute(player,"lastlogin")+act_logon)
@@ -216,10 +214,14 @@ minetest.register_globalstep(function(dtime)
 			end
 			
 			if playerdata.dtime>5 then
+				print(playerdata.dtime)
 				playerdata.dtime=0
-				for i,att_def in ipairs(xpfw.attributes) do
-					if att_def.moving_average_factor ~= nil then
-						xpfw.player_add_attribute(player,att_def.name,0)
+				for i,att_def in pairs(xpfw.attributes) do
+					local att=xpfw.attributes[i]
+					print(i)
+					if att_def.moving_average_factor ~= nil and xpfw.player_get_attribute(player,i) > att.min then
+						print(att.min)
+						xpfw.player_add_attribute(player,i,att.min)
 					end
 				end
 			end
