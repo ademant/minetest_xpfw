@@ -19,15 +19,39 @@ xpfw.register_attribute=function(name,data)
 	data.name=name
 	xpfw.attributes[name]=data
 end
-
-xpfw.player_add_attribute=function(player,attrib,val)
+local player_addsub_attribute=function(player,attrib,val,maf)
 	local oldvalue=xpfw.player_get_attribute(player,attrib)
 	local att_def=xpfw.attributes[attrib]
 	local new_val = oldvalue + val
-	if att_def.moving_average_factor ~= nil then
-		new_val=(oldvalue*att_def.moving_average_factor + val)/(att_def.moving_average_factor + 1)
+	if maf ~= nil then
+		new_val=(oldvalue*maf + val)/(maf + 1)
 	end
 	xpfw.player_set_attribute(player,attrib,new_val)
+end
+
+xpfw.player_add_attribute=function(player,attrib,val)
+	local nval=val
+	local att_def=xpfw.attributes[attrib]
+	if val==nil then
+		nval=att_def.max or 20
+	end
+	if att_def.moving_average_factor ~= nil then
+		player_addsub_attribute(player,attrib,nval,att_def.moving_average_factor)
+	else
+		player_addsub_attribute(player,attrib,nval)
+	end
+end
+xpfw.player_sub_attribute=function(player,attrib,val)
+	local nval=val
+	local att_def=xpfw.attributes[attrib]
+	if val==nil then
+		nval=att_def.max or 20
+	end
+	if att_def.recreation_factor ~= nil then
+		player_addsub_attribute(player,attrib,(-1)*nval,att_def.recreation_factor)
+	else
+		player_addsub_attribute(player,attrib,(-1)*nval)
+	end
 end
 
 xpfw.player_get_attribute=function(player,attrib)
@@ -114,6 +138,7 @@ minetest.register_on_placenode(function(pos, newnode, player, oldnode, itemstack
 	if player ~= nil then
 		local playername = player:get_player_name()
 		xpfw.player_add_attribute(player,"build",1)
+		xpfw.player_add_attribute(player,"mean_build_speed")
 	end
 end)
 
@@ -134,6 +159,7 @@ end)
 minetest.register_on_dignode(function(pos,oldnode,player)
 	if player ~= nil then
 		xpfw.player_add_attribute(player,"dug",1)
+		xpfw.player_add_attribute(player,"mean_dig_speed")
 	end
 end)
 
@@ -214,14 +240,14 @@ minetest.register_globalstep(function(dtime)
 			end
 			
 			if playerdata.dtime>5 then
-				print(playerdata.dtime)
 				playerdata.dtime=0
+				print(dump2(player:hud_get_flags()))
 				for i,att_def in pairs(xpfw.attributes) do
 					local att=xpfw.attributes[i]
 					print(i)
-					if att_def.moving_average_factor ~= nil and xpfw.player_get_attribute(player,i) > att.min then
+					if att_def.recreation_factor ~= nil and xpfw.player_get_attribute(player,i) > att.min then
 						print(att.min)
-						xpfw.player_add_attribute(player,i,att.min)
+						xpfw.player_sub_attribute(player,i)
 					end
 				end
 			end

@@ -31,6 +31,19 @@ xpfw.register_attribute("mean_walked_speed",{min=0,max=20,
 	})
 xpfw.register_attribute("mean_swam_speed",{min=0,max=20,
 	moving_average_factor=minetest.settings:get("xpfw.swam_mean_weight") or 100,
+	recreation_factor=(minetest.settings:get("xpfw.swam_mean_weight") or 100)/2,
+	default=0,
+	hud=1
+	})
+xpfw.register_attribute("mean_dig_speed",{min=0,max=20,
+	moving_average_factor=minetest.settings:get("xpfw.dig_mean_weight") or 100,
+	recreation_factor=(minetest.settings:get("xpfw.dig_recreation") or 50),
+	default=0,
+	hud=1
+	})
+xpfw.register_attribute("mean_build_speed",{min=0,max=20,
+	moving_average_factor=minetest.settings:get("xpfw.build_mean_weight") or 100,
+	recreation_factor=(minetest.settings:get("xpfw.build_recreation") or 50),
 	default=0,
 	hud=1
 	})
