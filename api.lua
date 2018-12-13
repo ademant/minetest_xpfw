@@ -1,5 +1,5 @@
 
-local M=xpfw.store_table
+local M=xpfw
 if M.player == nil then
 	M.player={}
 end
@@ -93,7 +93,8 @@ M.register_experience=function(name,indata)
 end
 
 xpfw.player_reset_attributes=function(player)
-	for i,att_def in ipairs(xpfw.attributes) do
+	for i,att_def in pairs(xpfw.attributes) do
+		print(dump2(att_def))
 		local setval=att_def.min or 0
 		if att_def.default ~= nil then
 			setval=att_def.default
@@ -122,6 +123,19 @@ minetest.register_on_joinplayer(function(player)
 	local pm=player:get_meta()
 	pm:set_int(xpfw.prefix.."_lastlogin",os.time()) -- last login time
 	xpfw.player_add_attribute(player,"login",1)
+	xpfw.player_add_hud(player)
+	playerdata.dtime=0
+--	print(pm:get_int(xpfw.prefix.."_lastlogin"))
+end
+)
+xpfw.player_add_hud=function(player)
+	local playerdata=M.player[player:get_player_name()]
+	if playerdata==nil then
+		return
+	end
+	if playerdata.hud == nil then
+		playerdata.hud=1
+	end
 	playerdata.hidx=player:hud_add({
 		hud_elem_type = "text",
 		position = {x=1,y=1},
@@ -129,11 +143,18 @@ minetest.register_on_joinplayer(function(player)
 		text = "",
 		alignment = {x=-1,y=-1},
 	})
-	playerdata.dtime=0
---	print(pm:get_int(xpfw.prefix.."_lastlogin"))
 end
-)
-
+xpfw.player_remove_hud=function(player)
+	local playerdata=M.player[player:get_player_name()]
+	if playerdata==nil then
+		return
+	end
+	if playerdata.hidx ~= nil then
+		player:hud_remove_id(playerdata.hidx)
+		playerdata.hidx = nil
+		playerdata.hud=nil
+	end
+end
 minetest.register_on_placenode(function(pos, newnode, player, oldnode, itemstack, pointed_thing)
 	if player ~= nil then
 		local playername = player:get_player_name()
@@ -143,14 +164,14 @@ minetest.register_on_placenode(function(pos, newnode, player, oldnode, itemstack
 end)
 
 minetest.register_on_dieplayer(function(player, reason)
-	print(dump2(reason))
+--	print(dump2(reason))
 	if player ~= nil then
 		xpfw.player_add_attribute(player,"deaths",1)
 	end
 end)
 
 minetest.register_on_chat_message(function(player, reason)
-	print(dump2(player))
+--	print(dump2(player))
 	if player ~= nil then
 		xpfw.player_add_attribute(minetest.get_player_by_name(player),"spoke",1)
 	end
@@ -172,7 +193,7 @@ end)
 
 minetest.register_on_shutdown(function()
 	local leave=os.time()
-	print(dump2(minetest.get_connected_players()))
+--	print(dump2(minetest.get_connected_players()))
 	local players = minetest.get_connected_players()
 	for i=1, #players do
 		local player=players[i]
@@ -241,12 +262,12 @@ minetest.register_globalstep(function(dtime)
 			
 			if playerdata.dtime>5 then
 				playerdata.dtime=0
-				print(dump2(player:hud_get_flags()))
+--				print(dump2(player:hud_get_flags()))
 				for i,att_def in pairs(xpfw.attributes) do
 					local att=xpfw.attributes[i]
-					print(i)
+--					print(i)
 					if att_def.recreation_factor ~= nil and xpfw.player_get_attribute(player,i) > att.min then
-						print(att.min)
+--						print(att.min)
 						xpfw.player_sub_attribute(player,i)
 					end
 				end

@@ -26,12 +26,13 @@ xpfw.register_attribute("meanlight",{min=0,max=default.LIGHT_MAX,
 	})
 xpfw.register_attribute("mean_walked_speed",{min=0,max=20,
 	moving_average_factor=minetest.settings:get("xpfw.walked_mean_weight") or 100,
+	recreation_factor=(minetest.settings:get("xpfw.walked_recreation") or 200),
 	default=0,
 	hud=1
 	})
 xpfw.register_attribute("mean_swam_speed",{min=0,max=20,
 	moving_average_factor=minetest.settings:get("xpfw.swam_mean_weight") or 100,
-	recreation_factor=(minetest.settings:get("xpfw.swam_mean_weight") or 100)/2,
+	recreation_factor=(minetest.settings:get("xpfw.swam_recreation") or 200),
 	default=0,
 	hud=1
 	})
