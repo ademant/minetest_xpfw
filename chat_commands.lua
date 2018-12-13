@@ -30,6 +30,16 @@ minetest.register_chatcommand("xpreset", {
 		minetest.chat_send_player(name, "All Attributs resetted")
 	end
 })
+minetest.register_chatcommand("xphud", {
+	privs = {
+		xpfwset = true
+	},
+	description = "Toggle hud on/off",
+	func = function(name, param)
+		xpfw.player_hud_toggle(name)
+		minetest.chat_send_player(name, "hud on/off")
+	end
+})
 
 minetest.register_chatcommand("xpfw", {
 	params = "<name>",

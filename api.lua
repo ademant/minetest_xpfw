@@ -40,6 +40,8 @@ xpfw.player_add_attribute=function(player,attrib,val)
 	else
 		player_addsub_attribute(player,attrib,nval)
 	end
+	local playerdata=M.player[player:get_player_name()]
+	playerdata.flags[attrib]=1
 end
 xpfw.player_sub_attribute=function(player,attrib,val)
 	local nval=val
@@ -117,6 +119,7 @@ minetest.register_on_joinplayer(function(player)
 	if M.player[playername]==nil then
 		M.player[playername]={last_pos=player:get_pos(), --actual position
 			hud=1, --hud on
+			flags={},
 			} 
 	end
 	local playerdata=M.player[playername]
@@ -128,6 +131,18 @@ minetest.register_on_joinplayer(function(player)
 --	print(pm:get_int(xpfw.prefix.."_lastlogin"))
 end
 )
+xpfw.player_hud_toggle=function(name)
+	local player=minetest.get_player_by_name(name)
+	local playerdata=M.player[name]
+	if playerdata==nil then
+		return
+	end
+	if playerdata.hidx==nil then
+		xpfw.player_add_hud(player)
+	else
+		xpfw.player_remove_hud(player)
+	end
+end
 xpfw.player_add_hud=function(player)
 	local playerdata=M.player[player:get_player_name()]
 	if playerdata==nil then
@@ -150,7 +165,7 @@ xpfw.player_remove_hud=function(player)
 		return
 	end
 	if playerdata.hidx ~= nil then
-		player:hud_remove_id(playerdata.hidx)
+		player:hud_remove(playerdata.hidx)
 		playerdata.hidx = nil
 		playerdata.hud=nil
 	end
@@ -266,10 +281,11 @@ minetest.register_globalstep(function(dtime)
 				for i,att_def in pairs(xpfw.attributes) do
 					local att=xpfw.attributes[i]
 --					print(i)
-					if att_def.recreation_factor ~= nil and xpfw.player_get_attribute(player,i) > att.min then
+					if att_def.recreation_factor ~= nil and xpfw.player_get_attribute(player,i) > att.min and playerdata.flags[i] == nil then
 --						print(att.min)
 						xpfw.player_sub_attribute(player,i)
 					end
+					playerdata.flags[i]=nil
 				end
 			end
 		end
