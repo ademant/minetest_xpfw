@@ -45,7 +45,9 @@ xpfw.player_add_attribute=function(player,attrib,val)
 end
 xpfw.player_sub_attribute=function(player,attrib,val)
 	local nval=val
-	local att_def=xpfw.attributes[attrib]
+	local playername=player:get_player_name()
+--	local att_def=xpfw.attributes[attrib]
+	local att_def=M.player[playername].attributes[attrib]
 	if val==nil then
 		nval=att_def.max or 20
 	end
@@ -62,13 +64,15 @@ xpfw.player_get_attribute=function(player,attrib)
 end
 xpfw.player_set_attribute=function(player,attrib,val)
 	local pm=player:get_meta()
-	local att_def=xpfw.attributes[attrib]
+	local playername=player:get_player_name()
+	local att_def=M.player[playername].attributes[attrib]
 	local setvalue=math.min(att_def.max or math.huge,math.max(att_def.min or 0,val))
 	pm:set_float(xpfw.prefix.."_"..attrib,setvalue)
 end
 
 xpfw.player_ping_attribute=function(player,attrib)
-	local att_def=xpfw.attributes[attrib]
+	local playername=player:get_player_name()
+	local att_def=M.player[playername].attributes[attrib]
 	local ping_max=att_def.max
 	if ping_max == nil then
 		ping_max=xpfw.experience_max
@@ -119,13 +123,25 @@ minetest.register_on_joinplayer(function(player)
 	if M.player[playername]==nil then
 		M.player[playername]={last_pos=player:get_pos(), --actual position
 			flags={},
+			attributes=table.copy(xpfw.attributes),
 			}
 		local playerhud=xpfw.mod_storage:get_int(playername.."_hud")
 		if playerhud==nil then playerhud=1 end
 		if playerhud == 1 then
 			M.player[playername].hud=1
 		end
-		
+--		print(dump2(M.player[playername].attributes))
+		for i,tdef in pairs(M.player[playername].attributes) do
+			local rf=xpfw.mod_storage:get_int(playername.."_"..i.."_rf")
+			local maf=xpfw.mod_storage:get_int(playername.."_"..i.."_maf")
+			print(i,rf,maf)
+			if rf>0 then
+				M.player[playername].attributes[i].recreation_factor=rf
+			end
+			if maf>0 then
+				M.player[playername].attributes[i].moving_average_factor=maf
+			end
+		end
 	end
 	local playerdata=M.player[playername]
 	local pm=player:get_meta()
@@ -135,9 +151,9 @@ minetest.register_on_joinplayer(function(player)
 		xpfw.player_add_hud(player)
 	end
 	playerdata.dtime=0
---	print(pm:get_int(xpfw.prefix.."_lastlogin"))
 end
 )
+
 xpfw.player_hud_toggle=function(name)
 	local player=minetest.get_player_by_name(name)
 	local playerdata=M.player[name]
@@ -186,14 +202,12 @@ minetest.register_on_placenode(function(pos, newnode, player, oldnode, itemstack
 end)
 
 minetest.register_on_dieplayer(function(player, reason)
---	print(dump2(reason))
 	if player ~= nil then
 		xpfw.player_add_attribute(player,"deaths",1)
 	end
 end)
 
 minetest.register_on_chat_message(function(player, reason)
---	print(dump2(player))
 	if player ~= nil then
 		xpfw.player_add_attribute(minetest.get_player_by_name(player),"spoke",1)
 	end
@@ -217,12 +231,27 @@ minetest.register_on_leaveplayer(function(player)
 	end
 end)
 
+xpfw.save_player_data=function(player)
+	local playerdata=M.player[player:get_player_name()]
+--	print(dump2(playerdata))
+	for i,tdef in pairs(playerdata.attributes) do
+		if tdef.moving_average_factor ~= nil then
+			xpfw.mod_storage:set_int(player:get_player_name().."_"..i.."_maf",tdef.moving_average_factor)
+		end
+		if tdef.recreation_factor ~= nil then
+			xpfw.mod_storage:set_int(player:get_player_name().."_"..i.."_rf",tdef.recreation_factor)
+		end
+--		print(i)
+	end
+end
+
 minetest.register_on_shutdown(function()
 	local leave=os.time()
-	print(dump2(minetest.get_connected_players()))
+--	print(dump2(minetest.get_connected_players()))
 	local players = minetest.get_connected_players()
 	for i=1, #players do
 		local player=players[i]
+		xpfw.save_player_data(player)
 		local playerdata=M.player[player]
 		xpfw.player_add_attribute(player,"logon",xpfw.player_get_attribute(player,"lastlogin")-leave)
 		local playerdata=M.player[player:get_player_name()]
