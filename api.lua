@@ -118,15 +118,22 @@ minetest.register_on_joinplayer(function(player)
 	end
 	if M.player[playername]==nil then
 		M.player[playername]={last_pos=player:get_pos(), --actual position
-			hud=1, --hud on
 			flags={},
-			} 
+			}
+		local playerhud=xpfw.mod_storage:get_int(playername.."_hud")
+		if playerhud==nil then playerhud=1 end
+		if playerhud == 1 then
+			M.player[playername].hud=1
+		end
+		
 	end
 	local playerdata=M.player[playername]
 	local pm=player:get_meta()
 	pm:set_int(xpfw.prefix.."_lastlogin",os.time()) -- last login time
 	xpfw.player_add_attribute(player,"login",1)
-	xpfw.player_add_hud(player)
+	if playerdata.hud~=nil then
+		xpfw.player_add_hud(player)
+	end
 	playerdata.dtime=0
 --	print(pm:get_int(xpfw.prefix.."_lastlogin"))
 end
@@ -201,18 +208,27 @@ end)
 
 minetest.register_on_leaveplayer(function(player)
 	if player ~= nil then
+		local playerdata=M.player[player:get_player_name()]
 		local leave=os.time()
 		xpfw.player_add_attribute(player,"logon",xpfw.player_get_attribute(player,"lastlogin")-leave)
+		local playerhud=playerdata.hud
+		if playerhud==nil then playerhud=0 end
+		xpfw.mod_storage:set_int(player:get_player_name().."_hud",playerhud)
 	end
 end)
 
 minetest.register_on_shutdown(function()
 	local leave=os.time()
---	print(dump2(minetest.get_connected_players()))
+	print(dump2(minetest.get_connected_players()))
 	local players = minetest.get_connected_players()
 	for i=1, #players do
 		local player=players[i]
+		local playerdata=M.player[player]
 		xpfw.player_add_attribute(player,"logon",xpfw.player_get_attribute(player,"lastlogin")-leave)
+		local playerdata=M.player[player:get_player_name()]
+		local playerhud=playerdata.hud
+		if playerhud==nil then playerhud=0 end
+		xpfw.mod_storage:set_int(player:get_player_name().."_hud",playerhud)
 	end
 end
 )
@@ -224,7 +240,6 @@ minetest.register_globalstep(function(dtime)
 		local name = player:get_player_name()
 		if M.player[name] ~= nil then
 			local playerdata=M.player[name]
---			print(dump2(playerdata))
 			playerdata.dtime=playerdata.dtime+dtime
 			local act_pos=player:get_pos()
 			-- calculating distance to last known position
