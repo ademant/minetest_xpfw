@@ -9,8 +9,8 @@ for i,configs in ipairs({"decay"}) do
 end
 
 xpfw.prefix=minetest.settings:get("xpfw.prefix") or "xp"
-xpfw.mean_weight=minetest.settings:get("xpfw.mean_weight") or 500
-xpfw.experience_max=minetest.settings:get("xpfw.experience_max") or 20
+xpfw.mean_weight=tonumber(minetest.settings:get("xpfw.mean_weight")) or 500
+xpfw.experience_max=tonumber(minetest.settings:get("xpfw.experience_max")) or 20
 
 for i,attr in ipairs({"walked","distance","swam","login","dug","build","deaths","spoke","killed_mobs","killed_player",
 		"logon"}) do
@@ -20,31 +20,31 @@ for i,attr in ipairs({"lastlogin"}) do
 	xpfw.register_attribute(attr,{min=0,max=math.huge,default=0})
 end
 xpfw.register_attribute("meanlight",{min=0,max=default.LIGHT_MAX,
-	moving_average_factor=minetest.settings:get("xpfw.light_mean_weight") or 500,
-	default=math.min(default.LIGHT_MAX,minetest.settings:get("xpfw.default") or 11),
+	moving_average_factor=tonumber(minetest.settings:get("xpfw.light_mean_weight")) or 500,
+	default=math.min(default.LIGHT_MAX,tonumber(minetest.settings:get("xpfw.default")) or 11),
 	hud=1
 	})
 xpfw.register_attribute("mean_walked_speed",{min=0,max=20,
-	moving_average_factor=minetest.settings:get("xpfw.walked_mean_weight") or 100,
-	recreation_factor=(minetest.settings:get("xpfw.walked_recreation") or 200),
+	moving_average_factor=tonumber(minetest.settings:get("xpfw.walked_mean_weight")) or 100,
+	recreation_factor=(tonumber(minetest.settings:get("xpfw.walked_recreation")) or 200),
 	default=0,
 	hud=1
 	})
 xpfw.register_attribute("mean_swam_speed",{min=0,max=20,
-	moving_average_factor=minetest.settings:get("xpfw.swam_mean_weight") or 100,
-	recreation_factor=(minetest.settings:get("xpfw.swam_recreation") or 200),
+	moving_average_factor=tonumber(minetest.settings:get("xpfw.swam_mean_weight")) or 100,
+	recreation_factor=(tonumber(minetest.settings:get("xpfw.swam_recreation")) or 200),
 	default=0,
 	hud=1
 	})
 xpfw.register_attribute("mean_dig_speed",{min=0,max=20,
-	moving_average_factor=minetest.settings:get("xpfw.dig_mean_weight") or 100,
-	recreation_factor=(minetest.settings:get("xpfw.dig_recreation") or 50),
+	moving_average_factor=tonumber(minetest.settings:get("xpfw.dig_mean_weight")) or 100,
+	recreation_factor=(tonumber(minetest.settings:get("xpfw.dig_recreation")) or 50),
 	default=0,
 	hud=1
 	})
 xpfw.register_attribute("mean_build_speed",{min=0,max=20,
-	moving_average_factor=minetest.settings:get("xpfw.build_mean_weight") or 100,
-	recreation_factor=(minetest.settings:get("xpfw.build_recreation") or 50),
+	moving_average_factor=tonumber(minetest.settings:get("xpfw.build_mean_weight")) or 100,
+	recreation_factor=(tonumber(minetest.settings:get("xpfw.build_recreation")) or 50),
 	default=0,
 	hud=1
 	})

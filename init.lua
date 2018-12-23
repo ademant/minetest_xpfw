@@ -10,6 +10,8 @@ xpfw.attributes={}
 minetest.log("action", "[MOD]"..minetest.get_current_modname().." -- start loading from "..minetest.get_modpath(minetest.get_current_modname()))
 -- Load files
 
+-- import settingtypes.txt
+basic_functions.import_settingtype(xpfw.path .. "/settingtypes.txt")
 
 dofile(xpfw.path .. "/api.lua") -- API
 dofile(xpfw.path .. "/config.lua") -- API
