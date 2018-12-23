@@ -49,4 +49,4 @@ xpfw.register_attribute("mean_build_speed",{min=0,max=20,
 	hud=1
 	})
 
-print(dump2(xpfw.attributes))
+--print(dump2(xpfw.attributes))

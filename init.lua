@@ -6,7 +6,7 @@ xpfw.mod_storage=minetest.get_mod_storage()
 xpfw.store_table={}--xpfw.mod_storage:to_table()
 xpfw.attributes={}
 
-print(dump2(xpfw.mod_store))
+--print(dump2(xpfw.mod_store))
 minetest.log("action", "[MOD]"..minetest.get_current_modname().." -- start loading from "..minetest.get_modpath(minetest.get_current_modname()))
 -- Load files
 

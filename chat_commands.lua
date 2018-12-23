@@ -7,9 +7,9 @@ minetest.register_chatcommand("xpset", {
 	params = "<name>",
 	description = "Set the statistics/experience for yourself",
 	func = function(name, param)
-		print(name,param)
+--		print(name,param)
 		local xp= string.split(param, " ")
-		print(dump2(xp))
+--		print(dump2(xp))
 		player=minetest.get_player_by_name(name)
 		if xpfw.player_get_attribute(player,xp[1]) ~= nil then
 			xpfw.player_set_attribute(player,xp[1],xp[2])
