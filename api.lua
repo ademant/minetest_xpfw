@@ -68,6 +68,7 @@ xpfw.player_set_attribute=function(player,attrib,val)
 	local att_def=M.player[playername].attributes[attrib]
 	local setvalue=math.min(att_def.max or math.huge,math.max(att_def.min or 0,val))
 	pm:set_float(xpfw.prefix.."_"..attrib,setvalue)
+	M.player[playername].flags[attrib]=1
 end
 
 xpfw.player_ping_attribute=function(player,attrib)
