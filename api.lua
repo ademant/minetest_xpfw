@@ -25,6 +25,9 @@ local player_addsub_attribute=function(player,attrib,val,maf)
 	local new_val = oldvalue + val
 	if maf ~= nil then
 		new_val=(oldvalue*maf + val)/(maf + 1)
+		if val < 0 then
+			new_val=math.floor(new_val)
+		end
 	end
 	xpfw.player_set_attribute(player,attrib,new_val)
 end
@@ -46,7 +49,6 @@ end
 xpfw.player_sub_attribute=function(player,attrib,val)
 	local nval=val
 	local playername=player:get_player_name()
---	local att_def=xpfw.attributes[attrib]
 	local att_def=M.player[playername].attributes[attrib]
 	if val==nil then
 		nval=att_def.max or 20
@@ -320,7 +322,7 @@ minetest.register_globalstep(function(dtime)
 				player:hud_change(playerdata.hidx,"text",act_print)
 			end
 			
-			if playerdata.dtime>5 then
+			if playerdata.dtime>xpfw.rtime then
 				playerdata.dtime=0
 --				print(dump2(player:hud_get_flags()))
 				for i,att_def in pairs(xpfw.attributes) do

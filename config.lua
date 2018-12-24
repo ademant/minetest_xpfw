@@ -11,6 +11,7 @@ end
 xpfw.prefix=minetest.settings:get("xpfw.prefix") or "xp"
 xpfw.mean_weight=tonumber(minetest.settings:get("xpfw.mean_weight")) or 500
 xpfw.experience_max=tonumber(minetest.settings:get("xpfw.experience_max")) or 20
+xpfw.rtime=tonumber(minetest.settings:get("xpfw.recreation_time")) or 5
 
 for i,attr in ipairs({"walked","distance","swam","login","dug","build","deaths","spoke","killed_mobs","killed_player",
 		"logon"}) do
