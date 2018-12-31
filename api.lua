@@ -78,7 +78,9 @@ xpfw.player_set_attribute_to_nil=function(player,attrib)
 	local att_def=M.player[playername].attributes[attrib]
 	pm:set_float(xpfw.prefix.."_"..attrib,-1)
 end
-
+xpfw.player_remove_flag=function(player,attrib)
+	M.player[playername].flags[attrib]=nil	
+end
 xpfw.player_ping_attribute=function(player,attrib)
 	local playername=player:get_player_name()
 	local att_def=M.player[playername].attributes[attrib]
@@ -148,6 +150,7 @@ minetest.register_on_joinplayer(function(player)
 				M.player[playername].attributes[i].moving_average_factor=maf
 			end
 		end
+		xpfw.player_set_attribute_to_nil(player,"meanlight")
 	end
 	local playerdata=M.player[playername]
 	local pm=player:get_meta()
@@ -157,9 +160,6 @@ minetest.register_on_joinplayer(function(player)
 		xpfw.player_add_hud(player)
 	end
 	playerdata.dtime=0
-	print(dump2(player:get_pos()))
-	print(minetest.get_node_light(player:get_pos(),.5))
-	xpfw.player_set_attribute_to_nil(player,"meanlight")
 end
 )
 
@@ -311,6 +311,8 @@ minetest.register_globalstep(function(dtime)
 			local light_level=minetest.get_node_light(act_pos)
 			if light_level ~= nil then
 				if xpfw.player_get_attribute(player,"meanlight") == (-1) then
+					local light_level=minetest.get_node_light(act_pos,0.5)
+					print("light level "..light_level)
 					xpfw.player_set_attribute(player,"meanlight",light_level)
 				end
 				xpfw.player_add_attribute(player,"meanlight",light_level)
