@@ -72,6 +72,12 @@ xpfw.player_set_attribute=function(player,attrib,val)
 	pm:set_float(xpfw.prefix.."_"..attrib,setvalue)
 	M.player[playername].flags[attrib]=1
 end
+xpfw.player_set_attribute_to_nil=function(player,attrib)
+	local pm=player:get_meta()
+	local playername=player:get_player_name()
+	local att_def=M.player[playername].attributes[attrib]
+	pm:set_float(xpfw.prefix.."_"..attrib,-1)
+end
 
 xpfw.player_ping_attribute=function(player,attrib)
 	local playername=player:get_player_name()
@@ -103,7 +109,6 @@ end
 
 xpfw.player_reset_attributes=function(player)
 	for i,att_def in pairs(xpfw.attributes) do
-		print(dump2(att_def))
 		local setval=att_def.min or 0
 		if att_def.default ~= nil then
 			setval=att_def.default
@@ -133,11 +138,9 @@ minetest.register_on_joinplayer(function(player)
 		if playerhud == 1 then
 			M.player[playername].hud=1
 		end
---		print(dump2(M.player[playername].attributes))
 		for i,tdef in pairs(M.player[playername].attributes) do
 			local rf=xpfw.mod_storage:get_int(playername.."_"..i.."_rf")
 			local maf=xpfw.mod_storage:get_int(playername.."_"..i.."_maf")
-			print(i,rf,maf)
 			if rf>0 then
 				M.player[playername].attributes[i].recreation_factor=rf
 			end
@@ -154,6 +157,9 @@ minetest.register_on_joinplayer(function(player)
 		xpfw.player_add_hud(player)
 	end
 	playerdata.dtime=0
+	print(dump2(player:get_pos()))
+	print(minetest.get_node_light(player:get_pos(),.5))
+	xpfw.player_set_attribute_to_nil(player,"meanlight")
 end
 )
 
@@ -236,7 +242,6 @@ end)
 
 xpfw.save_player_data=function(player)
 	local playerdata=M.player[player:get_player_name()]
---	print(dump2(playerdata))
 	for i,tdef in pairs(playerdata.attributes) do
 		if tdef.moving_average_factor ~= nil then
 			xpfw.mod_storage:set_int(player:get_player_name().."_"..i.."_maf",tdef.moving_average_factor)
@@ -244,13 +249,11 @@ xpfw.save_player_data=function(player)
 		if tdef.recreation_factor ~= nil then
 			xpfw.mod_storage:set_int(player:get_player_name().."_"..i.."_rf",tdef.recreation_factor)
 		end
---		print(i)
 	end
 end
 
 minetest.register_on_shutdown(function()
 	local leave=os.time()
---	print(dump2(minetest.get_connected_players()))
 	local players = minetest.get_connected_players()
 	for i=1, #players do
 		local player=players[i]
@@ -307,6 +310,9 @@ minetest.register_globalstep(function(dtime)
 			--calculating mean sun level
 			local light_level=minetest.get_node_light(act_pos)
 			if light_level ~= nil then
+				if xpfw.player_get_attribute(player,"meanlight") == (-1) then
+					xpfw.player_set_attribute(player,"meanlight",light_level)
+				end
 				xpfw.player_add_attribute(player,"meanlight",light_level)
 			end
 			
@@ -324,12 +330,9 @@ minetest.register_globalstep(function(dtime)
 			
 			if playerdata.dtime>xpfw.rtime then
 				playerdata.dtime=0
---				print(dump2(player:hud_get_flags()))
 				for i,att_def in pairs(xpfw.attributes) do
 					local att=xpfw.attributes[i]
---					print(i)
 					if att_def.recreation_factor ~= nil and xpfw.player_get_attribute(player,i) > att.min and playerdata.flags[i] == nil then
---						print(att.min)
 						xpfw.player_sub_attribute(player,i)
 					end
 					playerdata.flags[i]=nil
