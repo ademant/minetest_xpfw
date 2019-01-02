@@ -12,3 +12,6 @@ xpfw.dig_mean_weight (Weight factor for mean digging experience) int 10 1 10000
 xpfw.build_mean_weight (Weight factor for mean building experience) int 10 1 10000
 xpfw.dig_recreation (Weight factor for mean digging experience) int 5 1 10000
 xpfw.build_recreation (Weight factor for mean building experience) int 5 1 10000
+xpfw.craft_mean_weight (Weight factor for mean crafting experience) int 10 1 10000
+xpfw.craft_recreation (Weight factor for mean crafting experience) int 5 1 10000
+
