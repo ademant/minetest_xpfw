@@ -312,10 +312,13 @@ minetest.register_globalstep(function(dtime)
 			if light_level ~= nil then
 				if xpfw.player_get_attribute(player,"meanlight") == (-1) then
 					local light_level=minetest.get_node_light(act_pos,0.5)
-					print("light level "..light_level)
-					xpfw.player_set_attribute(player,"meanlight",light_level)
+					if light_level > 1 then
+						print("light level "..light_level)
+						xpfw.player_set_attribute(player,"meanlight",light_level)
+					end
+				else
+					xpfw.player_add_attribute(player,"meanlight",light_level)
 				end
-				xpfw.player_add_attribute(player,"meanlight",light_level)
 			end
 			
 			if playerdata.hidx ~= nil then
