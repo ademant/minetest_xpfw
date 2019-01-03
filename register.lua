@@ -137,11 +137,11 @@ minetest.register_globalstep(function(dtime)
 				local tvelo=vector.distance(tvel,{x=0,y=0,z=0})
 				if tvelo>0 then
 					xpfw.player_add_attribute(player,vel_action,tvelo*dtime)
-					
 					-- add experience
 					local mean_speed="mean_"..vel_action.."_speed"
 					if xpfw.attributes[mean_speed].max ~= nil then
-						xpfw.player_add_attribute(player,mean_speed,xpfw.attributes[mean_speed].max)
+						-- normal max velocity is 4. If slowed down than also reducing the mean value
+						xpfw.player_add_attribute(player,mean_speed,xpfw.attributes[mean_speed].max*tvelo/4)
 					end
 				end
 			end
