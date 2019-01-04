@@ -18,6 +18,12 @@ xpfw.register_attribute=function(name,data)
 	check_value(data,"max",math.huge)
 	data.name=name
 	xpfw.attributes[name]=data
+	if data.hud ~= nil and name ~= "logon" then
+		table.insert(xpfw.hud_intern,name)
+	end
+	if data.recreation_factor ~= nil then
+		table.insert(xpfw.attrib_recreates,name)
+	end
 end
 local player_addsub_attribute=function(player,attrib,val,maf)
 	local oldvalue=xpfw.player_get_attribute(player,attrib)
@@ -68,8 +74,9 @@ xpfw.player_set_attribute=function(player,attrib,val)
 	local pm=player:get_meta()
 	local playername=player:get_player_name()
 	local att_def=M.player[playername].attributes[attrib]
-	local setvalue=math.min(att_def.max or math.huge,math.max(att_def.min or 0,val))
-	pm:set_float(xpfw.prefix.."_"..attrib,setvalue)
+--	local setvalue=math.min(att_def.max or math.huge,math.max(att_def.min or 0,val))
+--	local setvalue=math.min(att_def.max,math.max(att_def.min,val))
+	pm:set_float(xpfw.prefix.."_"..attrib,math.min(att_def.max,math.max(att_def.min,val)))
 	M.player[playername].flags[attrib]=1
 end
 xpfw.player_set_attribute_to_nil=function(player,attrib)

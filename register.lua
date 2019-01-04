@@ -41,6 +41,7 @@ minetest.register_on_joinplayer(function(player)
 		xpfw.player_add_hud(player)
 	end
 	playerdata.dtime=0
+	playerdata.gtimer1=0
 end
 )
 
@@ -107,81 +108,92 @@ end
 )
 
 minetest.register_globalstep(function(dtime)
+--	local starttime=os.clock()
+--	xpfw.gtimer1=xpfw.gtimer1+dtime
 	local players = minetest.get_connected_players()
-	for i=1, #players do
-		local player=players[i]
-		local name = player:get_player_name()
-		if M.player[name] ~= nil then
-			local playerdata=M.player[name]
-			playerdata.dtime=playerdata.dtime+dtime
-			local act_pos=player:get_pos()
-			-- calculating distance to last known position
-			if playerdata.last_pos ~= nil then
-				local tdist=vector.distance(act_pos,playerdata.last_pos)
-				if tdist > 0 then
-					xpfw.player_add_attribute(player,"distance",tdist)
-					playerdata.last_pos = act_pos
-				end
-			else
-				playerdata.last_pos = act_pos
-			end
-			-- calculation walk by actual velocity
-			local tvel=player:get_player_velocity()
-			if tvel ~= nil then
-				local act_node=minetest.get_node(act_pos)
-				-- check if swimming
-				local vel_action="walked"
-				if minetest.get_item_group(act_node.name,"water")>0 then
-					vel_action="swam"
-				end
-				local tvelo=vector.distance(tvel,{x=0,y=0,z=0})
-				if tvelo>0 then
-					xpfw.player_add_attribute(player,vel_action,tvelo*dtime)
-					-- add experience
-					local mean_speed="mean_"..vel_action.."_speed"
-					if xpfw.attributes[mean_speed].max ~= nil then
-						-- normal max velocity is 4. If slowed down than also reducing the mean value
-						xpfw.player_add_attribute(player,mean_speed,xpfw.attributes[mean_speed].max*tvelo/4)
+	if #players ~= nil then
+		if #players > 0 then
+			for i=1, #players do
+				local player=players[i]
+				local name = player:get_player_name()
+				local playerdata=M.player[name]
+				if playerdata ~= nil then
+					playerdata.dtime=playerdata.dtime+dtime
+					playerdata.gtimer1=playerdata.gtimer1+dtime
+					local act_pos=player:get_pos()
+					-- calculating distance to last known position
+					if playerdata.last_pos ~= nil then
+						local tdist=vector.distance(act_pos,playerdata.last_pos)
+						if tdist > 0 then
+							xpfw.player_add_attribute(player,"distance",tdist)
+							playerdata.last_pos = act_pos
+						end
+					else
+						playerdata.last_pos = act_pos
+					end
+					-- calculation walk by actual velocity
+					local tvel=player:get_player_velocity()
+					if tvel ~= nil then
+						local act_node=minetest.get_node(act_pos)
+						-- check if swimming
+						local vel_action="walked"
+						if minetest.get_item_group(act_node.name,"water")>0 then
+							vel_action="swam"
+						end
+		--				local tvelo=vector.distance(tvel,{x=0,y=0,z=0})
+						local tvelo=tvel.x*tvel.x+tvel.y*tvel.y+tvel.z*tvel.z
+						if tvelo>0 then
+							tvelo=math.sqrt(tvelo)
+							xpfw.player_add_attribute(player,vel_action,tvelo*dtime)
+							-- add experience
+							local mean_speed="mean_"..vel_action.."_speed"
+							if xpfw.attributes[mean_speed].max ~= nil then
+								-- normal max velocity is 4. If slowed down than also reducing the mean value
+								xpfw.player_add_attribute(player,mean_speed,xpfw.attributes[mean_speed].max*tvelo/4)
+							end
+						end
+					end
+					--calculating mean sun level
+					local light_level=minetest.get_node_light(act_pos)
+					if light_level ~= nil then
+						if xpfw.player_get_attribute(player,"meanlight") == (-1) then
+							local light_level=minetest.get_node_light(act_pos,0.5)
+							if light_level > 1 then
+								print("light level "..light_level)
+								xpfw.player_set_attribute(player,"meanlight",light_level)
+							end
+						else
+							xpfw.player_add_attribute(player,"meanlight",light_level)
+						end
+					end
+					
+					if playerdata.gtimer1 > 0.5 then
+						playerdata.gtimer1=0
+						if playerdata.hidx ~= nil then
+							local act_logon=os.clock()-xpfw.player_get_attribute(player,"lastlogin")
+							local act_print=""
+							for i,attn in ipairs(xpfw.hud_intern) do
+								act_print=act_print..attn..":"..math.ceil(xpfw.player_get_attribute(player,attn)).."\n"
+							end
+							act_print=act_print.."logon: "..math.ceil(xpfw.player_get_attribute(player,"lastlogin")+act_logon)
+							player:hud_change(playerdata.hidx,"text",act_print)
+						end
+					end
+					
+					if playerdata.dtime>xpfw.rtime then
+						playerdata.dtime=0
+						for i,attn in ipairs(xpfw.attrib_recreates) do
+							local att=xpfw.attributes[attn]
+							if xpfw.player_get_attribute(player,attn) > att.min and playerdata.flags[attn] == nil then
+								xpfw.player_sub_attribute(player,attn)
+							end
+							playerdata.flags[i]=nil
+						end
 					end
 				end
-			end
-			--calculating mean sun level
-			local light_level=minetest.get_node_light(act_pos)
-			if light_level ~= nil then
-				if xpfw.player_get_attribute(player,"meanlight") == (-1) then
-					local light_level=minetest.get_node_light(act_pos,0.5)
-					if light_level > 1 then
-						print("light level "..light_level)
-						xpfw.player_set_attribute(player,"meanlight",light_level)
-					end
-				else
-					xpfw.player_add_attribute(player,"meanlight",light_level)
-				end
-			end
-			
-			if playerdata.hidx ~= nil then
-				local act_logon=os.clock()-xpfw.player_get_attribute(player,"lastlogin")
-				local act_print=""
-				for i,att_def in pairs(xpfw.attributes) do
-					if att_def.hud ~= nil and att_def.name ~= "logon" then
-						act_print=act_print..i..": "..math.ceil(xpfw.player_get_attribute(player,att_def.name)).."\n"
-					end
-				end
-				act_print=act_print.."logon: "..math.ceil(xpfw.player_get_attribute(player,"lastlogin")+act_logon)
-				player:hud_change(playerdata.hidx,"text",act_print)
-			end
-			
-			if playerdata.dtime>xpfw.rtime then
-				playerdata.dtime=0
-				for i,att_def in pairs(xpfw.attributes) do
-					local att=xpfw.attributes[i]
-					if att_def.recreation_factor ~= nil and xpfw.player_get_attribute(player,i) > att.min and playerdata.flags[i] == nil then
-						xpfw.player_sub_attribute(player,i)
-					end
-					playerdata.flags[i]=nil
-				end
+				
 			end
 		end
-		
 	end
+--	print("xpfw_abm: "..1000*(os.clock()-starttime))
 end)

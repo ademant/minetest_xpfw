@@ -12,7 +12,10 @@ xpfw.prefix=minetest.settings:get("xpfw.prefix") or "xp"
 xpfw.mean_weight=tonumber(minetest.settings:get("xpfw.mean_weight")) or 500
 xpfw.experience_max=tonumber(minetest.settings:get("xpfw.experience_max")) or 20
 xpfw.rtime=tonumber(minetest.settings:get("xpfw.recreation_time")) or 5
+xpfw.gtimer1=0
 xpfw.harvest_items={}
+xpfw.hud_intern={}
+xpfw.attrib_recreates={}
 
 for i,attr in ipairs({"walked","distance","swam","login","dug","build","deaths","spoke","killed_mobs","killed_player",
 		"logon","craft"}) do
