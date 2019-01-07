@@ -187,7 +187,7 @@ minetest.register_globalstep(function(dtime)
 							if xpfw.player_get_attribute(player,attn) > att.min and playerdata.flags[attn] == nil then
 								xpfw.player_sub_attribute(player,attn)
 							end
-							playerdata.flags[i]=nil
+							playerdata.flags[attn]=nil
 						end
 					end
 				end
