@@ -1,13 +1,13 @@
 xpfw.prefix (Prefix for variable name) string "xp"
-xpfw.recreation_time (Global time step to reduce mean values) int 5 1 100
+xpfw.recreation_time (Global time step to reduce mean values) float 1.25 
 xpfw.light_mean_weight (Weight factor for light value) int 5000 1 10000
 xpfw.light_mean_default (Weight factor for light value) int 11 0 14
 xpfw.mean_weight (Weight factor for calculating mean value) int 5000 1 10000
 xpfw.experience_max (Normal max value for experiences) int 20 10 100
-xpfw.swam_mean_weight (Weight factor for mean swimming experience) int 100 1 10000
-xpfw.walked_mean_weight (Weight factor for mean walking experience) int 100 1 10000
-xpfw.swam_recreation (Weight factor for mean swimming experience) int 30 1 10000
-xpfw.walked_recreation (Weight factor for mean walking experience) int 30 1 10000
+xpfw.swam_mean_weight (Weight factor for mean swimming experience) int 75 1 10000
+xpfw.walked_mean_weight (Weight factor for mean walking experience) int 75 1 10000
+xpfw.swam_recreation (Weight factor for mean swimming experience) int 15 1 10000
+xpfw.walked_recreation (Weight factor for mean walking experience) int 15 1 10000
 xpfw.dig_mean_weight (Weight factor for mean digging experience) int 10 1 10000
 xpfw.build_mean_weight (Weight factor for mean building experience) int 10 1 10000
 xpfw.dig_recreation (Weight factor for mean digging experience) int 5 1 10000

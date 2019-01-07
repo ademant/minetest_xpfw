@@ -137,8 +137,10 @@ minetest.register_globalstep(function(dtime)
 						local act_node=minetest.get_node(act_pos)
 						-- check if swimming
 						local vel_action="walked"
+						local vel_ref=4
 						if minetest.get_item_group(act_node.name,"water")>0 then
 							vel_action="swam"
+							vel_ref=2
 						end
 		--				local tvelo=vector.distance(tvel,{x=0,y=0,z=0})
 						local tvelo=tvel.x*tvel.x+tvel.y*tvel.y+tvel.z*tvel.z
@@ -149,7 +151,7 @@ minetest.register_globalstep(function(dtime)
 							local mean_speed="mean_"..vel_action.."_speed"
 							if xpfw.attributes[mean_speed].max ~= nil then
 								-- normal max velocity is 4. If slowed down than also reducing the mean value
-								xpfw.player_add_attribute(player,mean_speed,xpfw.attributes[mean_speed].max*tvelo/4)
+								xpfw.player_add_attribute(player,mean_speed,xpfw.attributes[mean_speed].max*tvelo/vel_ref)
 							end
 						end
 					end
