@@ -116,13 +116,27 @@ M.register_experience=function(name,indata)
 	M.experiences[name]=tid
 end
 
-xpfw.player_reset_attributes=function(player)
-	for i,att_def in pairs(xpfw.attributes) do
+xpfw.player_reset_single_attribute=function(player,attribute)
+	if attribute == nil then
+		return
+	end
+	local att_def=xpfw.attributes[attribute]
+	if add_def ~= nil then
 		local setval=att_def.min or 0
 		if att_def.default ~= nil then
-			setval=att_def.default
+			setval= att_def.default
 		end
 		player:set_attribute(xpfw.prefix.."_"..att_def.name,setval)
+	end
+end
+
+xpfw.player_reset_attributes=function(player,attribute)
+	if attribute==nil then
+		for i,att_def in pairs(xpfw.attributes) do
+			xpfw.player_reset_single_attribute(player,i)
+		end
+	else
+		xpfw.player_reset_single_attribute(player,attribute)
 	end
 end
 
