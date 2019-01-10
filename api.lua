@@ -121,12 +121,12 @@ xpfw.player_reset_single_attribute=function(player,attribute)
 		return
 	end
 	local att_def=xpfw.attributes[attribute]
-	if add_def ~= nil then
+	if att_def ~= nil then
 		local setval=att_def.min or 0
 		if att_def.default ~= nil then
 			setval= att_def.default
 		end
-		player:set_attribute(xpfw.prefix.."_"..att_def.name,setval)
+		xpfw.player_set_attribute(player,att_def.name,setval)
 	end
 end
 
