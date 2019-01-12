@@ -74,8 +74,6 @@ xpfw.player_set_attribute=function(player,attrib,val)
 	local pm=player:get_meta()
 	local playername=player:get_player_name()
 	local att_def=M.player[playername].attributes[attrib]
---	local setvalue=math.min(att_def.max or math.huge,math.max(att_def.min or 0,val))
---	local setvalue=math.min(att_def.max,math.max(att_def.min,val))
 	pm:set_float(xpfw.prefix.."_"..attrib,math.min(att_def.max,math.max(att_def.min,val)))
 	M.player[playername].flags[attrib]=1
 end
