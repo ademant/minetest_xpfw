@@ -169,7 +169,7 @@ minetest.register_globalstep(function(dtime)
 						end
 					end
 					
-					if playerdata.gtimer1 > 0.5 then
+					if playerdata.gtimer1 > 0.75 then
 						playerdata.gtimer1=0
 						if playerdata.hidx ~= nil then
 							local act_logon=os.clock()-xpfw.player_get_attribute(player,"lastlogin")
@@ -184,12 +184,16 @@ minetest.register_globalstep(function(dtime)
 					
 					if playerdata.dtime>xpfw.rtime then
 						playerdata.dtime=0
+						local flags=playerdata.flags
+						local attrib=xpfw.attributes
 						for i,attn in ipairs(xpfw.attrib_recreates) do
-							local att=xpfw.attributes[attn]
-							if xpfw.player_get_attribute(player,attn) > att.min and playerdata.flags[attn] == nil then
-								xpfw.player_sub_attribute(player,attn)
+							local att=attrib[attn]
+							if flags[attn] == nil then
+								if xpfw.player_get_attribute(player,attn) > att.min then
+									xpfw.player_sub_attribute(player,attn)
+								end
 							end
-							playerdata.flags[attn]=nil
+							flags[attn]=nil
 						end
 					end
 				end
