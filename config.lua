@@ -26,7 +26,7 @@ for i,attr in ipairs({"lastlogin"}) do
 end
 xpfw.register_attribute("meanlight",{min=0,max=default.LIGHT_MAX,
 	moving_average_factor=tonumber(minetest.settings:get("xpfw.light_mean_weight")) or 500,
-	default=math.min(default.LIGHT_MAX,tonumber(minetest.settings:get("xpfw.default")) or 11),
+	default=math.min(default.LIGHT_MAX,tonumber(minetest.settings:get("xpfw.light_mean_default")) or 11),
 	hud=1
 	})
 
