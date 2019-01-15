@@ -120,6 +120,10 @@ minetest.register_globalstep(function(dtime)
 				if playerdata ~= nil then
 					playerdata.dtime=playerdata.dtime+dtime
 					playerdata.gtimer1=playerdata.gtimer1+dtime
+					
+					-- add dtime to playtime of user
+					xpfw.player_add_attribute(player,"playtime",dtime)
+					
 					local act_pos=player:get_pos()
 					-- calculating distance to last known position
 					if playerdata.last_pos ~= nil then

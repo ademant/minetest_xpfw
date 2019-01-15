@@ -18,7 +18,7 @@ xpfw.hud_intern={}
 xpfw.attrib_recreates={}
 
 for i,attr in ipairs({"walked","distance","swam","login","dug","build","deaths","spoke","killed_mobs","killed_player",
-		"logon","craft"}) do
+		"logon","craft","playtime"}) do
 	xpfw.register_attribute(attr,{min=0,max=math.huge,default=0,hud=1})
 end
 for i,attr in ipairs({"lastlogin"}) do
