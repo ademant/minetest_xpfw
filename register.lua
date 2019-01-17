@@ -35,7 +35,7 @@ minetest.register_on_joinplayer(function(player)
 	end
 	local playerdata=M.player[playername]
 	local pm=player:get_meta()
-	pm:set_int(xpfw.prefix.."_lastlogin",os.time()) -- last login time
+	xpfw.player_set_attribute(player,"lastlogin",os.time()) -- last login time
 	xpfw.player_add_attribute(player,"login",1)
 	if playerdata.hud~=nil then
 		xpfw.player_add_hud(player)
@@ -176,12 +176,13 @@ minetest.register_globalstep(function(dtime)
 					if playerdata.gtimer1 > 0.75 then
 						playerdata.gtimer1=0
 						if playerdata.hidx ~= nil then
-							local act_logon=os.clock()-xpfw.player_get_attribute(player,"lastlogin")
+							local act_logon=os.time()-xpfw.player_get_attribute(player,"lastlogin")
 							local act_print=""
 							for i,attn in ipairs(xpfw.hud_intern) do
 								act_print=act_print..attn..":"..math.ceil(xpfw.player_get_attribute(player,attn)).."\n"
 							end
-							act_print=act_print.."logon: "..math.ceil(xpfw.player_get_attribute(player,"lastlogin")+act_logon)
+--							act_print=act_print.."logon: "..math.ceil(xpfw.player_get_attribute(player,"lastlogin")+act_logon)
+							act_print=act_print.."logon: "..math.ceil(act_logon)
 							player:hud_change(playerdata.hidx,"text",act_print)
 						end
 					end
