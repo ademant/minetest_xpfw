@@ -1,6 +1,6 @@
 xpfw.prefix (Prefix for variable name) string "xp"
 xpfw.recreation_time (Global time step to reduce mean values) float 0.5
-xpfw.light_mean_weight (Weight factor for light value) int 20 1 10000
+xpfw.light_mean_weight (Weight factor for light value) int 15 1 10000
 xpfw.light_mean_default (Weight factor for light value) int 11 0 14
 xpfw.mean_weight (Weight factor for calculating mean value) int 5000 1 10000
 xpfw.experience_max (Normal max value for experiences) int 20 10 100
