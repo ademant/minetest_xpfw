@@ -4,7 +4,10 @@ if cmi ~= nil then
 	print("pingping")
 	cmi.register_on_diemob(function(mob,cmi_death)
 		print("pong")
-		if mob ~= nil then print(dump2(mob)) end
+		if mob ~= nil then 
+			print(dump2(mob)) 
+			print(dump2(mob:get_player_name()))
+		end
 		if cmi_death == nil then
 			return
 		end
@@ -22,6 +25,8 @@ if cmi ~= nil then
 		print(dump2(puncher))
 		local puncer_name=puncher:get_player_name()
 		print(dump2(puncher_name))
+		print(dump2(puncher:get_entity_name()))
+		print(dump2(puncher:get_luaentity))
 		if puncher_name == nil then
 			return
 		else
