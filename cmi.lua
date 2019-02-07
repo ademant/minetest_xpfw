@@ -19,7 +19,9 @@ if cmi ~= nil then
 			return
 		end
 		local puncher=cmi_death.puncher
+		print(dump2(puncher))
 		local puncer_name=puncher:get_player_name()
+		print(dump2(puncher_name))
 		if puncher_name == nil then
 			return
 		else
