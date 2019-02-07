@@ -26,7 +26,7 @@ if cmi ~= nil then
 		local puncer_name=puncher:get_player_name()
 		print(dump2(puncher_name))
 		print(dump2(puncher:get_entity_name()))
-		print(dump2(puncher:get_luaentity))
+		print(dump2(puncher:get_luaentity()))
 		if puncher_name == nil then
 			return
 		else
