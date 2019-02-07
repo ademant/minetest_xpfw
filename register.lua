@@ -64,6 +64,13 @@ end)
 minetest.register_on_dieplayer(function(player, reason)
 	if player ~= nil then
 		xpfw.player_add_attribute(player,"deaths",1)
+		if reason == nil then return end
+		if reason.type ~= "punch" then return end
+		if reason.puncher == nil then return end
+		local puncher = reason.puncher
+		local puncher_name = puncher:get_player_name()
+		if puncher_name == nil or puncher_name == "" then return end
+		xpfw.player_add_attribute(puncher,"killed_player",1)
 	end
 end)
 

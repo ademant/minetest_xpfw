@@ -17,5 +17,8 @@ dofile(xpfw.path .. "/api.lua") -- API
 dofile(xpfw.path .. "/register.lua") -- Registering functions
 dofile(xpfw.path .. "/config.lua") -- API
 dofile(xpfw.path .. "/chat_commands.lua")
+if cmi ~= nil then
+	dofile(xpfw.path .. "/cmi.lua")
+end
 
 minetest.log("action", "[MOD]"..minetest.get_current_modname().." -- loaded ")
