@@ -1,10 +1,14 @@
 # count each killed mob
 
 if cmi ~= nil then
+	print("pingping")
 	cmi.register_on_diemob(function(mob,cmi_death)
+		print("pong")
+		if mob ~= nil then print(dump2(mob)) end
 		if cmi_death == nil then
 			return
 		end
+		print(dump2(cmi_death))
 		if cmi_death.type == nil then
 			return
 		end
