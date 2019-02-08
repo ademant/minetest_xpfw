@@ -22,7 +22,7 @@ if cmi ~= nil then
 			return
 		end
 		local puncher=cmi_death.puncher
-		for key,value in pairs(puncher) do
+		for key,value in pairs(cmi_death.puncher) do
 			print("found key "..key)
 		end
 		print(dump2(cmi_death.puncher:get_player_name()))
