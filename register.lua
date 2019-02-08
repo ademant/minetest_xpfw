@@ -132,7 +132,7 @@ minetest.register_globalstep(function(dtime)
 					xpfw.player_add_attribute(player,"playtime",dtime)
 					
 					local act_pos=player:get_pos()
-					-- calculating distance to last known position
+					-- calculating distance to last known position (including teleporting)
 					if playerdata.last_pos ~= nil then
 						local tdist=vector.distance(act_pos,playerdata.last_pos)
 						if tdist > 0 then
@@ -153,7 +153,6 @@ minetest.register_globalstep(function(dtime)
 							vel_action="swam"
 							vel_ref=2
 						end
-		--				local tvelo=vector.distance(tvel,{x=0,y=0,z=0})
 						local tvelo=tvel.x*tvel.x+tvel.y*tvel.y+tvel.z*tvel.z
 						if tvelo>0 then
 							tvelo=math.sqrt(tvelo)
@@ -180,6 +179,7 @@ minetest.register_globalstep(function(dtime)
 						end
 					end
 					
+					
 					if playerdata.gtimer1 > 0.75 then
 						playerdata.gtimer1=0
 						if playerdata.hidx ~= nil then
@@ -188,9 +188,23 @@ minetest.register_globalstep(function(dtime)
 							for i,attn in ipairs(xpfw.hud_intern) do
 								act_print=act_print..attn..":"..math.ceil(xpfw.player_get_attribute(player,attn)).."\n"
 							end
---							act_print=act_print.."logon: "..math.ceil(xpfw.player_get_attribute(player,"lastlogin")+act_logon)
 							act_print=act_print.."logon: "..math.ceil(act_logon)
 							player:hud_change(playerdata.hidx,"text",act_print)
+						end
+						
+						-- check for killed mobs
+						if mobs ~= nil then
+							if mobs.killed_mobs ~= nil then
+								if mobs.killed_mobs[playername] ~= nil then
+									if playerdata.killed_mobs == nil then
+										playerdata.killed_mobs = 0
+									end
+									if mobs_killed_mobs[playername] > playerdata.killed_mobs then
+										xpfw.player_add_attribute(player,"killed_mobs",mobs_killed_mobs[playername]-playerdata.killed_mobs)
+										playerdata.killed_mobs=mobs.killed_mobs[playername]
+									end
+								end
+							end
 						end
 					end
 					
