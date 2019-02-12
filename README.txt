@@ -3,7 +3,7 @@ Minetest Game mod: XPFW
 ==========================
 See license.txt for license information.
 
-XPFW provide an API for storing values relevant for experience mechanism into player metadata. It also stores several statistic values during playtime:
+XPFW provide an API for storing values relevant for experience mechanism into player metadata (Identified with prefix "XPFW_"). It also stores several statistic values during playtime:
 - Walked distances calculated out of velocity (important: teleporting does not influence this value)
 - accumulated distance out of comparing with last known position (important: teleporting is included in this value)
 - whole playtime on the server
@@ -15,6 +15,20 @@ XPFW provide an API for storing values relevant for experience mechanism into pl
 - amount of logins
 
 For several amounts also a kind of speed is calculated, like walking speed or crafting speed.
+
+Following chat commands are available:
+/xpfw 
+	prints stored values of XPFW in the chat window
+/xphud 
+	toggle the visible statistics in players hud on/off
+/xpreset
+	set all values to default
+/xpset <variable> <value>
+	need xpfwset privilege
+	Set variable of user to new value
+	
+Usage (roughly):
+xpfw.register_attribute(name,data) to register new attribute <name>
 
 Authors of source code
 ----------------------

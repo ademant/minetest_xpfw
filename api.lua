@@ -1,3 +1,6 @@
+--[[
+API for using statistic via meta data
+]]
 
 local M=xpfw
 if M.player == nil then
@@ -14,6 +17,16 @@ end
 end
 
 xpfw.register_attribute=function(name,data)
+--[[ Register new attribute for all user with spec in data
+data = {name = name of attribute,
+	min = Minimum value this attribute should be,
+	max = Maximum value where the attribute is cut, can be inf,
+	default = default value set at initialisation or reset,
+	hud = if set, attribute is shown in toggable hud display,
+	moving_average_factor = Attribute is moving average with this weighting factor,
+	recreation_factor = During recreation the value is reduced with this weighting factor
+	}
+]]
 	check_value(data,"min",0)
 	check_value(data,"max",math.huge)
 	data.name=name
