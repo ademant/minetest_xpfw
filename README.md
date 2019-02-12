@@ -1,8 +1,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-Minetest Game mod: XPFW
+# Minetest Game mod: XPFW
 ==========================
 See license.txt for license information.
 
+## Short description
 XPFW provide an API for storing values relevant for experience mechanism into player metadata (Identified with prefix "XPFW_"). It also stores several statistic values during playtime:
 - Walked distances calculated out of velocity (important: teleporting does not influence this value)
 - accumulated distance out of comparing with last known position (important: teleporting is included in this value)
@@ -16,6 +17,7 @@ XPFW provide an API for storing values relevant for experience mechanism into pl
 
 For several amounts also a kind of speed is calculated, like walking speed or crafting speed.
 
+## Chat Commands
 Following chat commands are available:
 
 /xpfw 
@@ -31,6 +33,7 @@ Following chat commands are available:
 	need xpfwset privilege
 	Set variable of user to new value
 	
+## Usage
 Usage (roughly):
 
 - xpfw.register_attribute(name,data) to register new attribute <name>
