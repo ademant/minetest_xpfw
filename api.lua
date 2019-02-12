@@ -38,7 +38,9 @@ data = {name = name of attribute,
 		table.insert(xpfw.attrib_recreates,name)
 	end
 end
+
 local player_addsub_attribute=function(player,attrib,val,maf)
+--internal use for adding and substracting values
 	local oldvalue=xpfw.player_get_attribute(player,attrib)
 	local att_def=xpfw.attributes[attrib]
 	local new_val = oldvalue + val
@@ -103,15 +105,30 @@ xpfw.player_set_attribute=function(player,attrib,val)
 	M.player[playername].flags[attrib]=1
 end
 xpfw.player_set_attribute_to_nil=function(player,attrib)
+--[[
+	Delete attribute for player (set to nil):
+	- player : ObjectRef to player
+	- attrib : name of attribute
+]]
 	local pm=player:get_meta()
 	local playername=player:get_player_name()
 	local att_def=M.player[playername].attributes[attrib]
 	pm:set_float(xpfw.prefix.."_"..attrib,-1)
 end
+
 xpfw.player_remove_flag=function(player,attrib)
+	-- internal usage to check if attribute was changed since last abm call
 	M.player[playername].flags[attrib]=nil	
 end
+
 xpfw.player_ping_attribute=function(player,attrib)
+--[[
+	"Ping" an attribute for player:
+	- player : ObjectRef to player
+	- attrib : name of attribute
+used for moving averaged attributes. Get max value from definition and add to attribute, which calcs
+a moving average.
+]]
 	local playername=player:get_player_name()
 	local att_def=M.player[playername].attributes[attrib]
 	local ping_max=att_def.max
@@ -164,6 +181,7 @@ xpfw.player_reset_attributes=function(player,attribute)
 end
 
 xpfw.player_hud_toggle=function(name)
+	-- toggle hud display for player with string <name>
 	local player=minetest.get_player_by_name(name)
 	local playerdata=M.player[name]
 	if playerdata==nil then

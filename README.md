@@ -1,6 +1,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 # Minetest Game mod: XPFW
-==========================
+
 See license.txt for license information.
 
 ## Short description
@@ -34,7 +34,7 @@ Following chat commands are available:
 	Set variable of user to new value
 	
 ## Usage
-Usage (roughly):
+Usage (roughly), for Details see api.lua:
 
 - xpfw.register_attribute(name,data) to register new attribute <name>
 - xpfw.player_get_attribute(player,name) Get stored value of attribute <name> for ObjectRef player
