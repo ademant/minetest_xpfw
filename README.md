@@ -17,18 +17,24 @@ XPFW provide an API for storing values relevant for experience mechanism into pl
 For several amounts also a kind of speed is calculated, like walking speed or crafting speed.
 
 Following chat commands are available:
+
 /xpfw 
 	prints stored values of XPFW in the chat window
+	
 /xphud 
 	toggle the visible statistics in players hud on/off
+	
 /xpreset
 	set all values to default
+	
 /xpset <variable> <value>
 	need xpfwset privilege
 	Set variable of user to new value
 	
 Usage (roughly):
-xpfw.register_attribute(name,data) to register new attribute <name>
+
+- xpfw.register_attribute(name,data) to register new attribute <name>
+- xpfw.player_get_attribute(player,name) Get stored value of attribute <name> for ObjectRef player
 
 Authors of source code
 ----------------------

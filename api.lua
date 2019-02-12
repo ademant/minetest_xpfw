@@ -80,10 +80,22 @@ xpfw.player_sub_attribute=function(player,attrib,val)
 end
 
 xpfw.player_get_attribute=function(player,attrib)
+--[[
+	Get stored attribute (or 0) for specified player:
+	- player : ObjectRef to player
+	- attrib : name of attribute
+]]
 	local pm=player:get_meta()
 	return pm:get_float(xpfw.prefix.."_"..attrib) or 0
 end
+
 xpfw.player_set_attribute=function(player,attrib,val)
+--[[
+	Set stored attribute (or 0) for specified player:
+	- player : ObjectRef to player
+	- attrib : name of attribute
+	- val : Value to store
+]]
 	local pm=player:get_meta()
 	local playername=player:get_player_name()
 	local att_def=M.player[playername].attributes[attrib]
