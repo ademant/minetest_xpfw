@@ -3,6 +3,16 @@
 
 See license.txt for license information.
 
+Main repository:
+
+https://notabug.org/ademant/minetest_xpfw.git
+
+Mirrors:
+
+https://gitlab.com/ademant/minetest_xpfw.git
+
+https://github.com/ademant/minetest_xpfw.git
+
 ## Short description
 XPFW provide an API for storing values relevant for experience mechanism into player metadata (Identified with prefix "XPFW_"). It also stores several statistic values during playtime:
 - Walked distances calculated out of velocity (important: teleporting does not influence this value)
