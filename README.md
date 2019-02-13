@@ -52,11 +52,10 @@ Usage (roughly), for Details see api.lua:
 - xpfw.player_ping_attribute(player,name) "Ping" attribute: Get max value which is defined for attribute and add to attribute. For an attribute, which is defined as moving average attribute this pinging increase the value. High frequency of pinging lead to faster increase, e.g. by pinging a digging attribute you get kind of digging speed, which can be used for an exhaustion mechanism.
 - xpfw.player_add/sub_attribute(player,name,diff) Adds or substract <diff> to attribute <name> of for ObjectRef player
 
-Authors of source code
-----------------------
+## Authors of source code
+
 ademant (MIT)
 
-Authors of media (textures)
----------------------------
+## Authors of media (textures)
   
 Created by ademant (CC BY 3.0):
