@@ -12,26 +12,7 @@ minetest.register_on_joinplayer(function(player)
 		end
 	end
 	if M.player[playername]==nil then
-		M.player[playername]={last_pos=player:get_pos(), --actual position
-			flags={},
-			attributes=table.copy(xpfw.attributes),
-			}
-		local playerhud=xpfw.mod_storage:get_int(playername.."_hud")
-		if playerhud==nil then playerhud=1 end
-		if playerhud == 1 then
-			M.player[playername].hud=1
-		end
-		for i,tdef in pairs(M.player[playername].attributes) do
-			local rf=xpfw.mod_storage:get_int(playername.."_"..i.."_rf")
-			local maf=xpfw.mod_storage:get_int(playername.."_"..i.."_maf")
-			if rf>0 then
-				M.player[playername].attributes[i].recreation_factor=rf
-			end
-			if maf>0 then
-				M.player[playername].attributes[i].moving_average_factor=maf
-			end
-		end
-		xpfw.player_set_attribute_to_nil(player,"meanlight")
+		xpfw.player_init_attributes(player)
 	end
 	local playerdata=M.player[playername]
 	local pm=player:get_meta()

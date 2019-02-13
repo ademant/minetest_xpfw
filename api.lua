@@ -6,14 +6,16 @@ local M=xpfw
 if M.player == nil then
 	M.player={}
 end
+
 if M.experiences == nil then
 	M.experiences={}
 end
 
 local check_value=function(tab,val,def)
-if tab[val] == nil then
-	tab[val] = def
-end
+-- check, if <val> exist in table <tab>. If not, set tab.val = def
+	if tab[val] == nil then
+		tab[val] = def
+	end
 end
 
 xpfw.register_attribute=function(name,data)
@@ -54,6 +56,8 @@ local player_addsub_attribute=function(player,attrib,val,maf)
 end
 
 xpfw.player_add_attribute=function(player,attrib,val)
+-- add <val> to <attrib> for <player>
+-- if <val> = nil then set to max value
 	local nval=val
 	local att_def=xpfw.attributes[attrib]
 	if val==nil then
@@ -67,7 +71,10 @@ xpfw.player_add_attribute=function(player,attrib,val)
 	local playerdata=M.player[player:get_player_name()]
 	playerdata.flags[attrib]=1
 end
+
 xpfw.player_sub_attribute=function(player,attrib,val)
+-- add <val> to <attrib> for <player>
+-- if <val> = nil then set to max value
 	local nval=val
 	local playername=player:get_player_name()
 	local att_def=M.player[playername].attributes[attrib]
@@ -98,12 +105,44 @@ xpfw.player_set_attribute=function(player,attrib,val)
 	- attrib : name of attribute
 	- val : Value to store
 ]]
+	if val == nil then return end
+	if attrib == nil then return end
+	if player == nil then return end
 	local pm=player:get_meta()
 	local playername=player:get_player_name()
+	if M.player[playername] == nil then
+	end
 	local att_def=M.player[playername].attributes[attrib]
 	pm:set_float(xpfw.prefix.."_"..attrib,math.min(att_def.max,math.max(att_def.min,val)))
 	M.player[playername].flags[attrib]=1
 end
+
+xpfw.player_init_attributes=function(player)
+	local pm=player:get_meta()
+	local playername=player:get_player_name()
+	M.player[playername]={last_pos=player:get_pos(), --actual position
+		flags={},
+		attributes=table.copy(xpfw.attributes),
+		}
+	local playerhud=xpfw.mod_storage:get_int(playername.."_hud")
+	if playerhud==nil then playerhud=1 end
+	if playerhud == 1 then
+		M.player[playername].hud=1
+	end
+	for i,tdef in pairs(M.player[playername].attributes) do
+		local rf=xpfw.mod_storage:get_int(playername.."_"..i.."_rf")
+		local maf=xpfw.mod_storage:get_int(playername.."_"..i.."_maf")
+		if rf>0 then
+			M.player[playername].attributes[i].recreation_factor=rf
+		end
+		if maf>0 then
+			M.player[playername].attributes[i].moving_average_factor=maf
+		end
+	end
+	xpfw.player_set_attribute_to_nil(player,"meanlight")
+	
+end
+
 xpfw.player_set_attribute_to_nil=function(player,attrib)
 --[[
 	Delete attribute for player (set to nil):
