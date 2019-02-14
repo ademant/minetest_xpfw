@@ -1,0 +1,180 @@
+# German Translation for farming mod.
+# Copyright (C) 2017
+# This file is distributed under the same license as the farming package.
+# Xanthin.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.27\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-03-31 HO:MI+ZONE\n"
+"PO-Revision-Date: 2019-02-14 HO:MI+ZONE\n"
+"Last-Translator: ademant\n"
+"Language-Team: \n"
+"Language: German \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Spelt"
+msgstr "Dinkel"
+
+msgid "Spelt Seed"
+msgstr "Dinkelkörner"
+
+msgid "Roasted Spelt"
+msgstr "Gerösteter Dinkel"
+
+msgid "Spelt Coffee"
+msgstr "Dinkelkaffee"
+
+msgid "Cup of Spelt Coffee"
+msgstr "Tasse Dinkelkaffee"
+
+msgid "Wheat"
+msgstr "Weizen"
+
+msgid "Barley"
+msgstr "Gerste"
+
+msgid "Coffee"
+msgstr "Kaffee"
+
+msgid "Cocoa"
+msgstr "Cacao"
+
+msgid "Potato"
+msgstr "Kartoffel"
+
+msgid "Beetroot"
+msgstr "Rote Beete"
+
+msgid "Blackberry"
+msgstr "Brombeere"
+
+msgid "Raspberry"
+msgstr "Himbeere"
+
+msgid "Strawberry"
+msgstr "Erdbeere"
+
+msgid "Blueberry"
+msgstr "Heidelbeere"
+
+msgid "Carrot"
+msgstr "Karotte"
+
+msgid "Corn"
+msgstr "Mais"
+
+msgid "Cotton"
+msgstr "Baumwolle"
+
+msgid "Garlic"
+msgstr "Knoblauch"
+
+msgid "Mustard"
+msgstr "Senf"
+
+msgid "Rhubarb"
+msgstr "Rhabarber"
+
+msgid "Tomatoe"
+msgstr "Tomate"
+
+msgid "Hop"
+msgstr "Hopfen"
+
+msgid "Nettle"
+msgstr "Brennnessel"
+
+msgid "Hemp"
+msgstr "Hanf"
+
+msgid "Tobaco"
+msgstr "Tabak"
+
+msgid "Tea"
+msgstr "Tee"
+
+msgid "Seed"
+msgstr "Saat"
+
+msgid "Coffee Grinder"
+msgstr "Kaffeemühle"
+
+msgid "Sugar"
+msgstr "Zucker"
+
+msgid "Flour"
+msgstr "Mehl"
+
+msgid "Juicer"
+msgstr "Entsafter"
+
+msgid "Mortar and Pestle"
+msgstr "Mörser"
+
+msgid "billhook"
+msgstr "Hippe"
+
+msgid "Threshing Flail"
+msgstr "Dreschflegel"
+
+msgid "Seed Picker"
+msgstr "Obstplücker"
+
+msgid "hoe"
+msgstr "Hacke"
+
+msgid "scythe"
+msgstr "Sense"
+
+msgid "Saucepan"
+msgstr "Pfanne"
+
+msgid "Straw"
+msgstr "Stroh"
+
+msgid "stone"
+msgstr "Stein"
+
+msgid "steel"
+msgstr "Stahl"
+
+msgid "wood"
+msgstr "Holz"
+
+msgid "Trellis"
+msgstr "Rankgerüst"
+
+msgid "Culturewheat"
+msgstr "Kulturweizen"
+
+msgid "Wildoat"
+msgstr "Wildhafer"
+
+msgid "wilted"
+msgstr "verwelkt"
+
+msgid "powder"
+msgstr "Pulver"
+
+msgid "roasted"
+msgstr "geröstet"
+
+msgid "Soil"
+msgstr "Ackerboden"
+
+msgid "Wet Soil"
+msgstr "Feuchter Ackerboden"
+
+msgid "Desert Soil"
+msgstr "Ackerboden"
+
+msgid "Wet Desert Soil"
+msgstr "Feuchter Ackerboden"
+
+msgid "Fibre"
+msgstr "Fasern"
